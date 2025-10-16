@@ -6,217 +6,41 @@
     <title>ระบบลงเวลาทำงาน</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .user-info {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .user-info p {
-            margin: 5px 0;
-        }
-
-        .content {
-            padding: 30px 20px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #06c755;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #05b04b;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #ee5a52;
-            transform: translateY(-2px);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .image-upload {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .image-preview {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .image-preview.show {
-            display: block;
-        }
-
-        .readonly-data {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .readonly-data p {
-            margin: 8px 0;
-            color: #555;
-        }
-
-        .history-table {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background: #667eea;
-            color: white;
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background: #f5f5f5;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #667eea;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        @media (max-width: 480px) {
-            .btn-group {
-                flex-direction: column;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Kanit', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .user-info { background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; margin-top: 15px; text-align: left; font-size: 14px; }
+        .user-info p { margin: 5px 0; }
+        .content { padding: 30px 20px; }
+        .btn-group { display: flex; gap: 15px; margin-bottom: 30px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: #06c755; color: white; }
+        .btn-primary:hover { background: #05b04b; transform: translateY(-2px); }
+        .btn-secondary { background: #ff6b6b; color: white; }
+        .btn-secondary:hover { background: #ee5a52; transform: translateY(-2px); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .image-upload { display: flex; flex-direction: column; gap: 10px; }
+        .image-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px; display: none; }
+        .image-preview.show { display: block; }
+        .readonly-data { background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .readonly-data p { margin: 8px 0; color: #555; }
+        .history-table { width: 100%; overflow-x: auto; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #667eea; color: white; font-weight: bold; }
+        tr:hover { background: #f5f5f5; }
+        .loading { text-align: center; padding: 50px; color: #667eea; }
+        .hidden { display: none; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; font-weight: bold; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        @media (max-width: 480px) { .btn-group { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -245,92 +69,74 @@
 
             <div id="startWorkForm" class="hidden">
                 <h2 style="margin-bottom: 20px;">ลงเวลาเริ่มงาน</h2>
-                
                 <div class="form-group">
                     <label>⏰ เวลาเริ่มงาน</label>
                     <input type="time" id="startTime" required>
                 </div>
-
                 <div class="form-group">
                     <label>🛞 เลขไมล์เริ่มงาน</label>
                     <input type="number" id="startMileage" placeholder="กรอกเลขไมล์" required>
                 </div>
-
                 <div class="form-group">
                     <label>📸 รูปถ่ายเลขไมล์เริ่มงาน</label>
                     <input type="file" accept="image/*" capture="environment" id="startMileageImage" onchange="previewImage(this, 'startMileagePreview')">
                     <img id="startMileagePreview" class="image-preview">
                 </div>
-
                 <div class="form-group">
                     <label>🤳 รูปถ่ายพนักงานเริ่มงาน</label>
                     <input type="file" accept="image/*" capture="user" id="startEmployeeImage" onchange="previewImage(this, 'startEmployeePreview')">
                     <img id="startEmployeePreview" class="image-preview">
                 </div>
-
                 <button class="btn btn-primary" style="width:100%;" onclick="saveStartWork()">💾 บันทึกข้อมูล</button>
             </div>
 
             <div id="endWorkForm" class="hidden">
                 <h2 style="margin-bottom: 20px;">ลงเวลาเลิกงาน</h2>
-                
                 <div class="readonly-data">
                     <p><strong>⏰ เวลาเริ่มงาน:</strong> <span id="readonlyStartTime"></span></p>
                     <p><strong>🛞 เลขไมล์เริ่มงาน:</strong> <span id="readonlyStartMileage"></span></p>
                 </div>
-
                 <div class="form-group">
                     <label>⏰ เวลาเลิกงาน</label>
                     <input type="time" id="endTime" required>
                 </div>
-
                 <div class="form-group">
                     <label>🛞 เลขไมล์เลิกงาน</label>
                     <input type="number" id="endMileage" placeholder="กรอกเลขไมล์" required>
                 </div>
-
                 <div class="form-group">
                     <label>🔄 จำนวนรอบงานที่วิ่ง</label>
                     <input type="number" id="rounds" placeholder="กรอกจำนวนรอบ" required>
                 </div>
-
                 <div class="form-group">
                     <label>📦 จำนวนจุดที่นำออกส่งทั้งหมด</label>
                     <input type="number" id="totalPoints" placeholder="กรอกจำนวนจุด" required>
                 </div>
-
                 <div class="form-group">
                     <label>✅ จำนวนจุดที่ส่งสำเร็จ</label>
                     <input type="number" id="successPoints" placeholder="กรอกจำนวนจุดที่ส่งสำเร็จ" required>
                 </div>
-
                 <div class="form-group">
                     <label>📝 ระบุ/หมายเหตุ</label>
                     <textarea id="note" placeholder="กรอกหมายเหตุ (ถ้ามี)"></textarea>
                 </div>
-
                 <div class="form-group">
                     <label>📸 รูปถ่ายเลขไมล์เลิกงาน</label>
                     <input type="file" accept="image/*" capture="environment" id="endMileageImage" onchange="previewImage(this, 'endMileagePreview')">
                     <img id="endMileagePreview" class="image-preview">
                 </div>
-
                 <div class="form-group">
                     <label>🤳 รูปถ่ายพนักงานเลิกงาน</label>
                     <input type="file" accept="image/*" capture="user" id="endEmployeeImage" onchange="previewImage(this, 'endEmployeePreview')">
                     <img id="endEmployeePreview" class="image-preview">
                 </div>
-
                 <button class="btn btn-secondary" style="width:100%;" onclick="saveEndWork()">💾 บันทึกข้อมูล</button>
             </div>
 
             <div id="summaryView" class="hidden">
                 <h2 style="margin-bottom: 20px; color: #06c755;">✅ สรุปข้อมูลการทำงานวันนี้</h2>
-                
-                <div class="readonly-data" id="summaryData">
-                    <!-- ข้อมูลสรุปจะแสดงที่นี่ -->
-                </div>
-              </div>
+                <div class="readonly-data" id="summaryData"></div>
+            </div>
 
             <div id="historySection" class="hidden">
                 <h3 style="margin-top: 30px; margin-bottom: 15px;">📊 ประวัติการทำงาน (5 วันย้อนหลัง)</h3>
@@ -352,60 +158,71 @@
                                 <th>หมายเหตุ</th>
                             </tr>
                         </thead>
-                        <tbody id="historyBody">
-                        </tbody>
+                        <tbody id="historyBody"></tbody>
                     </table>
                 </div>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <h2 style="margin-bottom: 20px;">ลงทะเบียนพนักงาน</h2>
+                <div class="form-group">
+                    <label>ชื่อ - นามสกุล</label>
+                    <input type="text" id="regFullName" required>
+                </div>
+                <div class="form-group">
+                    <label>ทะเบียนรถ</label>
+                    <input type="text" id="regCarNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>เบอร์ติดต่อ</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>สาขา</label>
+                    <input type="text" id="regBranch" required>
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="registerEmployee()">💾 ลงทะเบียน</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ⚠️ เปลี่ยน Config ตรงนี้
         const CONFIG = {
-            LIFF_ID: '2008297366-7ylXdVAB', // ⚠️ ใส่ LIFF ID ของคุณ
-            API_URL: 'https://script.google.com/macros/s/AKfycbw2wm3AgQLLRcS5_qo4Xrjg5FNtakRZ4SfzO59cpAx-MVkXP4pD-dVbgFWsuegeIWMi/exec' // ⚠️ ใส่ Apps Script Web App URL
+            LIFF_ID: '2008297366-7ylXdVAB',
+            API_URL: 'https://script.google.com/macros/s/AKfycbw2wm3AgQLLRcS5_qo4Xrjg5FNtakRZ4SfzO59cpAx-MVkXP4pD-dVbgFWsuegeIWMi/exec'
         };
 
         let userProfile = null;
         let employeeData = null;
         let todayRecord = null;
 
-        // เริ่มต้น LIFF
         async function initializeLIFF() {
             try {
                 await liff.init({ liffId: CONFIG.LIFF_ID });
-                
                 if (!liff.isLoggedIn()) {
                     liff.login();
                     return;
                 }
-
                 userProfile = await liff.getProfile();
                 await loadEmployeeData();
                 await checkTodayStatus();
-                
             } catch (error) {
                 console.error('LIFF Error:', error);
                 alert('เกิดข้อผิดพลาดในการเชื่อมต่อ LINE');
             }
         }
 
-        // โหลดข้อมูลพนักงาน
         async function loadEmployeeData() {
             const response = await callAPI('getEmployeeData', { userId: userProfile.userId });
-            
             if (!response.success || !response.data) {
-                alert('ไม่พบข้อมูลพนักงาน กรุณาติดต่อผู้ดูแลระบบ');
-                liff.closeWindow();
+                document.getElementById('loadingScreen').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
                 return;
             }
-
             employeeData = response.data;
             displayUserInfo();
         }
 
-        // แสดงข้อมูลผู้ใช้
         function displayUserInfo() {
             document.getElementById('userName').textContent = employeeData.fullName;
             document.getElementById('userCar').textContent = employeeData.carNumber;
@@ -414,82 +231,75 @@
             document.getElementById('userInfo').style.display = 'block';
         }
 
-        // เช็คสถานะวันนี้
         async function checkTodayStatus() {
-            const response = await callAPI('checkTodayRecord', { userId: userProfile.userId });
-            todayRecord = response.data;
-
-            document.getElementById('loadingScreen').classList.add('hidden');
-
-            if (!todayRecord.hasRecord) {
-                // ยังไม่มีข้อมูล -> แสดงเมนูหลัก
-                document.getElementById('mainMenu').classList.remove('hidden');
-            } else if (todayRecord.startTime && !todayRecord.endTime) {
-                // มีเวลาเริ่มแล้ว แต่ยังไม่ได้ลงเวลาเลิก
-                document.getElementById('mainMenu').classList.remove('hidden');
-            } else if (todayRecord.endTime) {
-                // ลงเวลาครบแล้ว -> แสดงสรุป
-                showSummary();
-                loadHistory();
+            try {
+                const response = await callAPI('checkTodayRecord', { userId: userProfile.userId });
+                todayRecord = response.data;
+                document.getElementById('loadingScreen').classList.add('hidden');
+                if (!todayRecord.hasRecord) {
+                    document.getElementById('mainMenu').classList.remove('hidden');
+                } else if (todayRecord.startTime && !todayRecord.endTime) {
+                    document.getElementById('mainMenu').classList.remove('hidden');
+                } else if (todayRecord.endTime) {
+                    showSummary();
+                    await loadHistory();
+                }
+            } catch (error) {
+                document.getElementById('loadingScreen').textContent = 'เกิดข้อผิดพลาดในการโหลดสถานะ';
+                console.error('Check status error:', error);
             }
         }
 
-        // แสดงฟอร์มเริ่มงาน
         function showStartWorkForm() {
-            if (todayRecord.hasRecord && todayRecord.startTime) {
+            if (todayRecord && todayRecord.hasRecord && todayRecord.startTime) {
                 alert('คุณลงเวลาเริ่มงานวันนี้แล้ว');
                 return;
             }
-
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('startWorkForm').classList.remove('hidden');
-            
-            // ตั้งเวลาเริ่มงานเป็นเวลาปัจจุบัน
             const now = new Date();
             document.getElementById('startTime').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         }
 
-        // แสดงฟอร์มเลิกงาน
         function showEndWorkForm() {
-            if (!todayRecord.hasRecord || !todayRecord.startTime) {
+            if (!todayRecord || !todayRecord.hasRecord || !todayRecord.startTime) {
                 alert('กรุณาลงเวลาเริ่มงานก่อน');
                 return;
             }
-
             if (todayRecord.endTime) {
                 alert('คุณลงเวลาเลิกงานวันนี้แล้ว');
                 return;
             }
-
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('endWorkForm').classList.remove('hidden');
-            
             document.getElementById('readonlyStartTime').textContent = todayRecord.startTime;
             document.getElementById('readonlyStartMileage').textContent = todayRecord.startMileage;
-            
-            // ตั้งเวลาเลิกงานเป็นเวลาปัจจุบัน
             const now = new Date();
             document.getElementById('endTime').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         }
 
-        // บันทึกเวลาเริ่มงาน
         async function saveStartWork() {
+            const loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.textContent = 'กำลังบันทึก...';
+            document.getElementById('startWorkForm').appendChild(loading);
             const startTime = document.getElementById('startTime').value;
             const startMileage = document.getElementById('startMileage').value;
             const startMileageImage = document.getElementById('startMileageImage').files[0];
             const startEmployeeImage = document.getElementById('startEmployeeImage').files[0];
-
             if (!startTime || !startMileage || !startMileageImage || !startEmployeeImage) {
                 alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                document.getElementById('startWorkForm').removeChild(loading);
                 return;
             }
-
+            if (isNaN(startMileage) || startMileage <= 0) {
+                alert('เลขไมล์ต้องเป็นตัวเลขบวก');
+                document.getElementById('startWorkForm').removeChild(loading);
+                return;
+            }
             try {
-                // อัปโหลดรูปภาพ
                 const mileageImageUrl = await uploadImage(startMileageImage, 'start_mileage');
                 const employeeImageUrl = await uploadImage(startEmployeeImage, 'start_employee');
-
-                // บันทึกข้อมูล
                 const response = await callAPI('saveStartWork', {
                     userId: userProfile.userId,
                     startTime,
@@ -497,19 +307,33 @@
                     startMileageImageUrl: mileageImageUrl,
                     startEmployeeImageUrl: employeeImageUrl
                 });
-
                 if (response.success) {
-                    alert('✅ บันทึกเวลาเริ่มงานเรียบร้อย');
-                    await loadHistory();
-                    liff.closeWindow();
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success';
+                    alertDiv.textContent = '✅ บันทึกเวลาเริ่มงานเรียบร้อย';
+                    document.getElementById('startWorkForm').appendChild(alertDiv);
+                    setTimeout(() => {
+                        alertDiv.remove();
+                        document.getElementById('startWorkForm').classList.add('hidden');
+                        document.getElementById('mainMenu').classList.remove('hidden');
+                        checkTodayStatus();
+                    }, 3000);
                 }
             } catch (error) {
-                alert('เกิดข้อผิดพลาด: ' + error.message);
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-error';
+                alertDiv.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+                document.getElementById('startWorkForm').appendChild(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
             }
+            document.getElementById('startWorkForm').removeChild(loading);
         }
 
-        // บันทึกเวลาเลิกงาน
         async function saveEndWork() {
+            const loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.textContent = 'กำลังบันทึก...';
+            document.getElementById('endWorkForm').appendChild(loading);
             const endTime = document.getElementById('endTime').value;
             const endMileage = document.getElementById('endMileage').value;
             const rounds = document.getElementById('rounds').value;
@@ -518,23 +342,24 @@
             const note = document.getElementById('note').value;
             const endMileageImage = document.getElementById('endMileageImage').files[0];
             const endEmployeeImage = document.getElementById('endEmployeeImage').files[0];
-
             if (!endTime || !endMileage || !rounds || !totalPoints || !successPoints || !endMileageImage || !endEmployeeImage) {
                 alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                document.getElementById('endWorkForm').removeChild(loading);
                 return;
             }
-
-            if (parseFloat(endMileage) < parseFloat(todayRecord.startMileage)) {
-                alert('เลขไมล์เลิกงานต้องมากกว่าเลขไมล์เริ่มงาน');
+            if (isNaN(endMileage) || endMileage <= 0 || parseFloat(endMileage) < parseFloat(todayRecord.startMileage)) {
+                alert('เลขไมล์เลิกงานต้องมากกว่าเลขไมล์เริ่มงานและเป็นตัวเลขบวก');
+                document.getElementById('endWorkForm').removeChild(loading);
                 return;
             }
-
+            if (parseInt(successPoints) > parseInt(totalPoints)) {
+                alert('จำนวนจุดสำเร็จต้องไม่เกินจำนวนจุดทั้งหมด');
+                document.getElementById('endWorkForm').removeChild(loading);
+                return;
+            }
             try {
-                // อัปโหลดรูปภาพ
                 const mileageImageUrl = await uploadImage(endMileageImage, 'end_mileage');
                 const employeeImageUrl = await uploadImage(endEmployeeImage, 'end_employee');
-
-                // บันทึกข้อมูล
                 const response = await callAPI('saveEndWork', {
                     userId: userProfile.userId,
                     endTime,
@@ -546,21 +371,71 @@
                     endMileageImageUrl: mileageImageUrl,
                     endEmployeeImageUrl: employeeImageUrl
                 });
-
                 if (response.success) {
-                    alert('✅ บันทึกเวลาเลิกงานเรียบร้อย');
-                    await loadHistory();
-                    liff.closeWindow();
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success';
+                    alertDiv.textContent = '✅ บันทึกเวลาเลิกงานเรียบร้อย';
+                    document.getElementById('endWorkForm').appendChild(alertDiv);
+                    setTimeout(() => {
+                        alertDiv.remove();
+                        document.getElementById('endWorkForm').classList.add('hidden');
+                        document.getElementById('mainMenu').classList.remove('hidden');
+                        checkTodayStatus();
+                    }, 3000);
                 }
             } catch (error) {
-                alert('เกิดข้อผิดพลาด: ' + error.message);
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-error';
+                alertDiv.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+                document.getElementById('endWorkForm').appendChild(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
+            }
+            document.getElementById('endWorkForm').removeChild(loading);
+        }
+
+        async function registerEmployee() {
+            const fullName = document.getElementById('regFullName').value;
+            const carNumber = document.getElementById('regCarNumber').value;
+            const phone = document.getElementById('regPhone').value;
+            const branch = document.getElementById('regBranch').value;
+            if (!fullName || !carNumber || !phone || !branch) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+            if (!/^\d{10}$/.test(phone)) {
+                alert('เบอร์โทรต้องเป็นตัวเลข 10 หลัก');
+                return;
+            }
+            try {
+                const response = await callAPI('registerEmployee', {
+                    userId: userProfile.userId,
+                    fullName,
+                    carNumber,
+                    phone,
+                    branch
+                });
+                if (response.success) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success';
+                    alertDiv.textContent = '✅ ลงทะเบียนสำเร็จ';
+                    document.getElementById('registerForm').appendChild(alertDiv);
+                    setTimeout(() => {
+                        alertDiv.remove();
+                        document.getElementById('registerForm').classList.add('hidden');
+                        loadEmployeeData();
+                    }, 3000);
+                }
+            } catch (error) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-error';
+                alertDiv.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+                document.getElementById('registerForm').appendChild(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
             }
         }
 
-        // แสดงสรุปข้อมูล
         function showSummary() {
             document.getElementById('summaryView').classList.remove('hidden');
-            
             const summaryHTML = `
                 <p><strong>⏰ เวลาเริ่มงาน:</strong> ${todayRecord.startTime}</p>
                 <p><strong>🛞 เลขไมล์เริ่มงาน:</strong> ${todayRecord.startMileage}</p>
@@ -574,20 +449,15 @@
                 <p><strong>🛣️ ระยะทางรวม:</strong> ${todayRecord.totalDistance} กม.</p>
                 <p><strong>📝 หมายเหตุ:</strong> ${todayRecord.note || '-'}</p>
             `;
-            
             document.getElementById('summaryData').innerHTML = summaryHTML;
         }
 
-        // โหลดประวัติการทำงาน
         async function loadHistory() {
             const response = await callAPI('getWorkHistory', { userId: userProfile.userId });
-            
             if (response.success && response.data.length > 0) {
                 document.getElementById('historySection').classList.remove('hidden');
-                
                 const tbody = document.getElementById('historyBody');
                 tbody.innerHTML = '';
-                
                 response.data.forEach(record => {
                     const row = tbody.insertRow();
                     row.innerHTML = `
@@ -608,9 +478,12 @@
             }
         }
 
-        // อัปโหลดรูปภาพ
         async function uploadImage(file, type) {
             return new Promise((resolve, reject) => {
+                if (file.size > 1024 * 1024) {
+                    reject(new Error('ไฟล์รูปภาพต้องไม่เกิน 1MB'));
+                    return;
+                }
                 const reader = new FileReader();
                 reader.onload = async function(e) {
                     try {
@@ -619,7 +492,6 @@
                             mimeType: file.type,
                             fileName: `${type}_${userProfile.userId}_${Date.now()}.jpg`
                         });
-                        
                         if (response.success) {
                             resolve(response.data.url);
                         } else {
@@ -633,7 +505,6 @@
             });
         }
 
-        // แสดงตัวอย่างรูปภาพ
         function previewImage(input, previewId) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -646,18 +517,23 @@
             }
         }
 
-        // เรียก API
         async function callAPI(action, data) {
-            const response = await fetch(CONFIG.API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action, data })
-            });
-            
-            return await response.json();
+            try {
+                const response = await fetch(CONFIG.API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    body: JSON.stringify({ action, data })
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const result = await response.json();
+                if (!result.success) throw new Error(result.error || 'API error');
+                return result;
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
         }
 
-        // เริ่มต้นแอป
         window.onload = initializeLIFF;
     </script>
-</body>
-</html>
