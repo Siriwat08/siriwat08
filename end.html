@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ลงเวลาเลิกงาน / สรุป</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body{font-family:Kanit, sans-serif;margin:0;padding:18px;background:#f0f2f5}
+.container{max-width:980px;margin:20px auto;background:white;padding:22px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+.readonly{background:#f7fafc;padding:12px;border-radius:10px;margin-bottom:12px}
+label{display:block;margin-top:10px;font-weight:600}
+input,textarea{width:100%;padding:10px;margin-top:6px;border:1px solid #ddd;border-radius:8px}
+.btn{margin-top:14px;padding:12px;background:#f5a623;color:white;border:0;border-radius:10px;cursor:pointer;font-weight:700}
+.small{font-size:0.9rem;color:#666}
+.table-wrap{overflow-x:auto;margin-top:18px}
+table{width:100%;border-collapse:collapse;min-width:1200px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:center}
+th{background:linear-gradient(135deg,#FF6B35,#D84315);color:white;position:sticky;top:0}
+.status-complete{background:#48bb78;color:white;padding:4px 8px;border-radius:6px}
+.status-incomplete{background:#ed8936;color:white;padding:4px 8px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>ลงเวลาเลิกงาน / สรุปการทำงาน</h2>
+  <div id="empBrief" class="small">กำลังโหลด...</div>
+
+  <div class="readonly">
+    <div>เวลาเริ่มงาน: <span id="startTime">-</span></div>
+    <div>เลขไมล์เริ่มงาน: <span id="startMileage">-</span></div>
+  </div>
+
+  <label>เวลาเลิกงาน<input type="time" id="endTime"></label>
+  <label>เลขไมล์เลิกงาน<input type="number" id="endMileage" step="0.1"></label>
+  <label>จำนวนรอบงานที่วิ่ง<input type="number" id="trips"></label>
+  <label>จำนวนจุดนำออกส่งทั้งหมด<input type="number" id="totalDeliveries"></label>
+  <label>จำนวนจุดที่ส่งสำเร็จ<input type="number" id="successfulDeliveries"></label>
+  <label>ระบุ/หมายเหตุ<textarea id="notes"></textarea></label>
+
+  <div style="margin-top:10px">
+    <input type="file" id="endMileagePhoto" accept="image/*" capture="environment" style="display:none">
+    <button class="btn" id="pickMile">📸 ถ่าย/เลือกรูปเลขไมล์</button>
+    <input type="file" id="endEmployeePhoto" accept="image/*" capture="user" style="display:none">
+    <button class="btn" id="pickEmp" style="background:#06C755;margin-left:8px">🤳 ถ่าย/เลือกรูปพนักงาน</button>
+  </div>
+
+  <div style="margin-top:12px">
+    <button id="saveBtn" class="btn" style="background:#06C755">บันทึกข้อมูลเลิกงาน</button>
+  </div>
+
+  <div id="message" class="small" style="margin-top:12px;color:#333"></div>
+
+  <div class="table-wrap" id="historyWrap" style="display:none">
+    <h3>ประวัติ 5 วันล่าสุด</h3>
+    <table id="histTable">
+      <thead><tr>
+        <th>วันที่</th><th>เวลาเริ่ม</th><th>ไมล์เริ่ม</th><th>เวลาเลิก</th><th>ไมล์เลิก</th><th>ชั่วโมง</th><th>ระยะทาง</th><th>รอบ</th><th>ทั้งหมด</th><th>สำเร็จ</th><th>ไม่สำเร็จ</th><th>หมายเหตุ</th><th>สถานะ</th>
+      </tr></thead>
+      <tbody id="histBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+const LIFF_ID = '2008297366-7ylXdVAB';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw2wm3AgQLLRcS5_qo4Xrjg5FNtakRZ4SfzO59cpAx-MVkXP4pD-dVbgFWsuegeIWMi/exec';
+
+function serverCall(action,args){
+  return fetch(GAS_WEB_APP_URL,{method:'POST',headers:{'Content-Type':'application/json'},mode:'cors',body: JSON.stringify({action, args})})
+  .then(r=>r.json()).then(j=>{ if(j.status==='error') throw new Error(j.message||'server error'); return j.response; });
+}
+function readFileAsBase64(file){
+  return new Promise(resolve=>{
+    if(!file){ resolve(null); return; }
+    const r = new FileReader();
+    r.onload = e => resolve(e.target.result);
+    r.onerror = ()=> resolve(null);
+    r.readAsDataURL(file);
+  });
+}
+function calcFailed(total, success){ return Number(total||0) - Number(success||0); }
+
+(async function(){
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    if(!liff.isLoggedIn()){ liff.login(); return; }
+    const profile = await liff.getProfile();
+    const state = await serverCall('getWorkStateForToday', [profile.userId]);
+    if(state.status==='NO_EMP'){ alert('ยังไม่ได้ลงทะเบียน'); window.location.href='./register.html'; return; }
+    const emp = state.employeeData;
+    document.getElementById('empBrief').textContent = `${'{'}emp['ชื่อ - นามสกุล']||profile.displayName{'}'} • ${'{'}emp['ทะเบียนรถ']||''{'}'}`;
+    if(state.status==='NOT_STARTED'){ alert('ยังไม่ได้ลงเวลาเริ่มงาน'); window.location.href='./start.html'; return; }
+
+    const w = state.workData;
+    // fill readonly
+    document.getElementById('startTime').textContent = w['เวลาเริ่มงาน'] || '-';
+    document.getElementById('startTime').textContent = w['เวลาเริ่มงาน'] || '-';
+    document.getElementById('startMileage').textContent = w['เลขไมล์เริ่มงาน'] || '-';
+
+    // if already completed -> show summary only
+    if(state.status === 'COMPLETED'){
+      document.getElementById('endTime').value = w['เวลาเลิกงาน'] || '';
+      document.getElementById('endMileage').value = w['เลขไมล์เลิกงาน'] || '';
+      document.getElementById('trips').value = w['จำนวนรอบงานที่วิ่ง'] || '';
+      document.getElementById('totalDeliveries').value = w['จำนวนจุดที่นำออกส่งทั้งหมด'] || '';
+      document.getElementById('successfulDeliveries').value = w['จำนวนจุดที่ส่งสำเร็จ'] || '';
+      document.getElementById('notes').value = w['ระบุ/หมายเหตุ'] || '';
+      document.getElementById('message').textContent = 'สรุปข้อมูลวันนี้ (อ่านอย่างเดียว)';
+    }
+
+    // photo pickers
+    document.getElementById('pickMile').addEventListener('click', ()=> document.getElementById('endMileagePhoto').click());
+    document.getElementById('pickEmp').addEventListener('click', ()=> document.getElementById('endEmployeePhoto').click());
+
+    document.getElementById('saveBtn').addEventListener('click', async ()=>{
+      const endTime = document.getElementById('endTime').value;
+      const endMileage = document.getElementById('endMileage').value;
+      const trips = document.getElementById('trips').value;
+      const totalDeliveries = document.getElementById('totalDeliveries').value;
+      const successfulDeliveries = document.getElementById('successfulDeliveries').value;
+      const notes = document.getElementById('notes').value;
+      if(!endTime||!endMileage||!trips||!totalDeliveries||!successfulDeliveries){ alert('กรุณากรอกข้อมูลให้ครบ'); return; }
+      if(Number(endMileage) <= Number(w['เลขไมล์เริ่มงาน']||0)){ alert('เลขไมล์เลิกงานต้องมากกว่าเลขไมล์เริ่มงาน'); return; }
+      const endMileagePhoto = await readFileAsBase64(document.getElementById('endMileagePhoto').files[0]);
+      const endEmployeePhoto = await readFileAsBase64(document.getElementById('endEmployeePhoto').files[0]);
+      const payload = {
+        userId: profile.userId,
+        endTime, endMileage, trips, totalDeliveries, successfulDeliveries, notes, endMileagePhoto, endEmployeePhoto
+      };
+      const res = await serverCall('saveEndWork', [payload]);
+      if(res.status && res.status==='error'){ alert(res.message||'ผิดพลาด'); return; }
+      alert(res.message || 'บันทึกเรียบร้อย');
+      if(liff.isInClient()) liff.closeWindow(); else window.location.reload();
+    });
+
+    // history
+    const hist = await serverCall('getWorkHistory', [profile.userId]);
+    if(hist && hist.length){
+      document.getElementById('historyWrap').style.display='block';
+      const body = document.getElementById('histBody');
+      body.innerHTML = '';
+      hist.forEach(r=>{
+        const tr = document.createElement('tr');
+        const failed = Number(r['จำนวนจุดที่ส่งไม่สำเร็จ']||0);
+        const status = (r['เวลาเลิกงาน'] && r['เวลาเลิกงาน']!=='') ? '<span class="status-complete">สมบูรณ์</span>' : '<span class="status-incomplete">ไม่สมบูรณ์</span>';
+        const cells = [
+          r['ข้อมูลงานวันที่']||'-', r['เวลาเริ่มงาน']||'-', r['เลขไมล์เริ่มงาน']||'-', r['เวลาเลิกงาน']||'-', r['เลขไมล์เลิกงาน']||'-',
+          r['จำนวนชั่วโมงการทำงาน']||'-', r['ระยะทางรวม']||'-', r['จำนวนรอบงานที่วิ่ง']||'-', r['จำนวนจุดที่นำออกส่งทั้งหมด']||'-',
+          r['จำนวนจุดที่ส่งสำเร็จ']||'-', r['จำนวนจุดที่ส่งไม่สำเร็จ']||'-', r['ระบุ/หมายเหตุ']||'-', status
+        ];
+        tr.innerHTML = cells.map(c=>`<td>${c}</td>`).join('');
+        body.appendChild(tr);
+      });
+    }
+
+  } catch(e){
+    alert('Error: '+e.message); console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
